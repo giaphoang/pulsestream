@@ -1,0 +1,68 @@
+{
+  "accepted": 19411,
+  "accepted_per_second": 542.1283445282638,
+  "concurrency": 32,
+  "devices": 1000,
+  "durability": "upstream DDQ fsync per record; PostgreSQL synchronous_commit=on",
+  "error_samples": [
+    {
+      "body": "{\"error\":\"database unavailable\"}",
+      "status": 503
+    },
+    {
+      "body": "{\"error\":\"database unavailable\"}",
+      "status": 503
+    },
+    {
+      "body": "{\"error\":\"database unavailable\"}",
+      "status": 503
+    },
+    {
+      "body": "{\"error\":\"database unavailable\"}",
+      "status": 503
+    },
+    {
+      "body": "{\"error\":\"database unavailable\"}",
+      "status": 503
+    }
+  ],
+  "event_bytes_mean": 149.94,
+  "events_per_device": 20,
+  "failed": 589,
+  "latency_scope": "acceptance including retries; excludes registration and worker drain",
+  "p50_ms": 31.916708,
+  "p95_ms": 43.336167,
+  "p99_ms": 57.038917,
+  "response_counts": {
+    "202": 19411,
+    "503": 945,
+    "transport_error": 2454
+  },
+  "retries": 3399,
+  "run_id": "bench1793033851",
+  "scenario": "heartbeat",
+  "seconds": 35.805174542,
+  "platform": "macOS-26.5-arm64-arm-64bit-Mach-O",
+  "architecture": "arm64",
+  "logical_cpus": 11,
+  "postgres": "17.7 (Homebrew)",
+  "persisted_events": 19411,
+  "lost_observed_acknowledgments": 0,
+  "simulator_exit_code": 1,
+  "acceptance_manifest": "diagnostic-benchmark.json.accepted.jsonl",
+  "duplicate_records": 0,
+  "worker_drain_seconds": 0.16904304200033948,
+  "http_threads": 8,
+  "processing_workers": 4,
+  "wal_max_items": 100000,
+  "wal_segment_bytes": 8388608,
+  "wal_max_segments": 64,
+  "event_type": "heartbeat",
+  "network": "loopback; HTTP/1.1 connection per request",
+  "build_binary": "/Users/zap/Documents/healthcare_portfolio/pulsestream/build-release/pulsestream",
+  "metrics_after_drain": "# TYPE pulse_accepted_total counter\npulse_accepted_total 19411\npulse_duplicate_total 0\npulse_rejected_total 945\npulse_processed_total 19411\npulse_retry_total 0\npulse_queue_pending 0\npulse_queue_quarantined 0\npulse_wal_bytes 6889722\npulse_queue_failed 0\n",
+  "hardware": "Apple M3 Pro",
+  "memory_bytes": 19327352832,
+  "target_events_per_second": 10000,
+  "target_met": false
+}

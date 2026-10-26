@@ -2,4 +2,13 @@ ddq.o
 libddq.a
 ddq-test
 test_ddq
-
+build*/
+.local/
+.secrets/
+.env
+data/
+references/
+third_party/
+__pycache__/
+/benchmark.json
+*.accepted.jsonl

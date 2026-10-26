@@ -1,161 +1,99 @@
-# DurableDeliveryQueue
+# PulseStream
+Reliable synthetic cardiac-device telemetry and clinic monitoring in C++20, built by extending the cloned [IoTSharp/DurableDeliveryQueue](https://github.com/IoTSharp/DurableDeliveryQueue).
 
-DurableDeliveryQueue (DDQ) is a small POSIX C11 append-only queue for
-asynchronous delivery. The intended use is an application outbox:
+PulseStream adds POSIX HTTP/TCP ingestion, authenticated device registration, PostgreSQL idempotency, concurrent processing, transmission tracking, clinic notification review, audit history, and an operational dashboard. It is an independent portfolio simulator with engineering relevant to Medtronic-style connectivity workflows. Synthetic identifiers and events only; no diagnosis, ECG interpretation, device control, or emergency alerting.
 
-~~~text
-enqueue -> claim with a lease -> send -> ack
-                              \-> retry
-                              \-> quarantine
-~~~
+The upstream C queue is the actual durability engine. Its source, license, and Git history remain intact. See [source provenance](docs/PROVENANCE.md) and the [original README](UPSTREAM_README.md).
 
-The first prototype is intended for the IoTSharp/DurableDeliveryQueue
-repository and can later be included in LaneApp as a Git submodule. It is
-single-process and single-consumer. It does not change the existing LaneApp
-queue ABI.
+## Run
 
-## Properties
+```sh
+cp .env.example .env
+docker compose up --build -d
+```
 
-- Binary segmented log, with fixed little-endian fields.
-- Every record contains magic, version, type, message sequence, payload
-  length, CRC32, and a commit footer.
-- fsync is issued after every appended record in v0.1.
-- A lock file prevents two queue instances from mutating one directory.
-- On open/recover, complete records are replayed in segment order.
-- A short or incomplete tail in the final segment, after the manifest's
-  committed snapshot boundary, is truncated and counted. An incomplete
-  selected snapshot or corruption in an earlier segment is reported.
-- Claim, retry, ack, and quarantine are durable log events.
-- A claim has a wall-clock lease. Recovery preserves its claimed state,
-  including an expired lease, so the original consumer can finish ack or
-  quarantine. The next claim operation makes expired leases available.
-- Queue size is bounded by configured item, payload, segment, and segment-count
-  limits. An enqueue that reaches a limit returns an error.
+Open http://localhost:8080. The demo clinic credential in `.env.example` is `synthetic-clinic-a-credential`. The operator credential is `synthetic-operator-credential`. These are local synthetic demonstration values.
 
-## API
+Populate the running Docker stack with the C++ device simulator:
 
-The public API is in ddq.h:
+```sh
+docker compose exec -e PULSE_SIM_CLINIC=clinic-a \
+  -e PULSE_SIM_DEVICE_TOKEN=synthetic-device-credential telemetry \
+  device_simulator --devices 10 --events 20 --concurrency 4 --scenario mixed --output /data/benchmark.json
+```
 
-~~~c
-ddq_options_t options;
-ddq_t *queue = NULL;
-uint64_t sequence = 0;
-ddq_claim_t claim;
-char payload[4096];
-size_t payload_length = 0;
+The simulator prints its run ID. A device ID is `<run_id>-d0`. Enter that ID in the dashboard to review status/history. The mixed scenario includes all four event types and a two-part scheduled summary. Benchmarks use the default heartbeat scenario.
 
-ddq_options_default(&options);
-if (ddq_open(&queue, "/var/lib/my-app/outbox", &options) == DDQ_OK) {
-    ddq_enqueue(queue, payload, payload_length, &sequence);
-    if (ddq_claim(queue, 30000, &claim) == DDQ_OK) {
-        if (ddq_read(queue, claim.seq, payload, sizeof(payload),
-                     &payload_length) == DDQ_OK) {
-            /* Send and validate the business-level success response. */
-            ddq_ack(queue, claim.seq);
-        } else {
-            ddq_retry(queue, claim.seq, 1000);
-        }
-    }
-    ddq_close(queue);
-}
-~~~
+Native build:
 
-ddq_ack must be called only after the external service reports business
-success. A transport success without a valid application response should be
-retried or quarantined according to the caller's policy.
+```sh
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j 4
+ctest --test-dir build --output-on-failure
+set -a
+source .env
+set +a
+./build/pulsestream
+```
 
-## Build and test
+Install PostgreSQL/libpq and OpenSSL first, and set `PULSE_DATABASE_URL` to an existing database. The [runbook](docs/RUNBOOK.md) includes macOS build paths, environment variables, monitoring, and recovery guidance. Docker configuration is included; runtime Docker execution was unavailable on the development host.
 
-The Makefile uses a POSIX C11 compiler:
+## API example
 
-~~~sh
-make
-make test
-make clean
-~~~
+Eight business endpoints are specified in [OpenAPI](docs/openapi.yaml). Device submissions use device credentials; review endpoints use clinic credentials; registration and metrics use the operator credential.
 
-The test source covers lock exclusion, state transitions, restart replay,
-and recovery from a deliberately incomplete final record. The additional
-capacity fixtures cover repeated enqueue/ack, retry-history reclamation
-without any ack, mixed state and quarantine preservation, control-record
-headroom, and manifest recovery guards. Test loops and temporary-directory
-cleanup are bounded.
+```sh
+curl -sS http://localhost:8080/v1/devices \
+  -H 'Authorization: Bearer synthetic-operator-credential' \
+  -H 'Content-Type: application/json' \
+  -d '{"device_id":"synthetic-device-1","clinic_id":"clinic-a","token":"synthetic-device-credential","overdue_after_ms":60000}'
 
-## Capacity and recovery (2026-09-28)
+curl -sS http://localhost:8080/v1/events \
+  -H 'Authorization: Bearer synthetic-device-credential' \
+  -H 'Content-Type: application/json' \
+  -d '{"device_id":"synthetic-device-1","event_id":"synthetic-diagnostic-1","schema_version":1,"timestamp_ms":1000,"sequence":1,"type":"diagnostic_event","diagnostic_flag":"synthetic_review_flag"}'
 
-Capacity pressure automatically removes acknowledged items and redundant
-claim/retry history. Unconfirmed payloads, original message sequences,
-retry attempts and deadlines, active leases, and quarantined payloads and
-reasons are retained. Reclamation can shorten retry history without any
-acknowledged item. It publishes a new generation only when the resulting
-log is smaller and has room for the requested operation. The sequence
-high-water mark survives an empty snapshot; reclaimed sequences are never
-reused. Quarantine is not an ack. Repeating quarantine on the same item
-returns `DDQ_ALREADY_DONE` and keeps its first reason.
+curl -sS http://localhost:8080/v1/notifications \
+  -H 'Authorization: Bearer synthetic-clinic-a-credential'
+```
 
-Enqueue conservatively reserves space for claim and terminal records,
-state snapshots, maximum quarantine reasons, and record-boundary gaps.
-The reason budget is `min(4096, max_payload_bytes)`. It checks both the
-current append space and a worst-case compacted record layout. This can
-return `DDQ_FULL` before the configured item or raw byte limit is reached;
-very small configurations may accept no payload at all. A rejected enqueue
-does not accept a payload or consume its sequence. Dense logs accepted by
-an older binary without these reserves can still lack transition space;
-the new admission rule does not repair such directories automatically.
+A 202 is returned only after DDQ synchronizes the enqueue record. Processing is asynchronous. Retry identical event payloads and identities after an ambiguous network result. A conflicting identity or reused device sequence is rejected. Notification retrieval records delivery; acknowledgment is a separate POST. Out-of-order events retain their original timestamps and sequences.
 
-Legacy logs use `segment-N.log`. Compacted logs use
-`generation-G-segment-N.log`, with 20-digit decimal numbers. The
-authoritative `queue.manifest` selects one generation and records its
-committed snapshot boundary and sequence high-water mark. Staged segments
-and `queue.manifest.tmp` are synchronized before the manifest is atomically
-renamed and its directory synchronized. The old generation remains until
-publication succeeds. A persistent `queue.format` marker prevents a
-missing manifest from being mistaken for a fresh empty queue. Recovery
-validates the selected snapshot before cleaning inactive generations.
-An uncertain publication or cleanup failure stops further staging until
-recovery succeeds. Downgrading to a binary that ignores this format after
-the first compaction is unsupported and can lose queue visibility.
+| Method | Business endpoint |
+|---|---|
+| POST | `/v1/devices` |
+| POST | `/v1/events` |
+| GET | `/v1/devices/{device_id}/status` |
+| GET | `/v1/devices/{device_id}/events` |
+| GET | `/v1/transmissions` |
+| GET | `/v1/notifications` |
+| POST | `/v1/notifications/{notification_id}/ack` |
+| GET | `/v1/audit` |
 
-An append, synchronization, or publication failure can mean a complete
-record reached disk even though the operation reported failure. The
-instance then stops public payload reads and mutations. The caller must
-recover or reopen before continuing delivery; recovery does not itself
-expire claims. Statistics remain available for diagnostics. All calls on
-one instance must be serialized by its owner; the file lock does not
-provide thread synchronization. Public declarations and structure layouts
-are unchanged, and no explicit compaction API is added.
+The dashboard, `/healthz`, and operator-protected `/metrics` are additional operational routes.
 
-For an initially valid directory exclusively owned by DDQ, with unchanged
-options, active and staged or retained generations occupy at most
-`2 * max_segments * segment_bytes` logical log bytes. The manifest and its
-temporary file add at most two 48-byte files. This is not a filesystem
-quota: allocation and metadata overhead, external or preexisting artifacts,
-and other queue directories are outside this bound. Retained quarantine
-evidence consumes real capacity. User-space loops have count and monotonic
-time limits; blocking storage-driver calls such as `fsync` still require
-host monitoring.
+## Verification
 
-As of 2026-09-28, these changes passed whitespace, strict CP936
-round-trip, delimiter, single-exit, and unchanged-public-header static
-checks. Compilation, executable C tests, target ARM/eMMC validation, and
-power-cut tests for these changes are **NOT_RUN**. The fixtures above are
-test source, not runtime acceptance evidence.
+```sh
+export PULSE_TEST_DATABASE_URL=postgresql://user:password@127.0.0.1:5432/pulsestream_test
+python3 tests/integration.py
+python3 tests/crash_matrix.py --rounds 100
+PULSE_BINARY=build/pulsestream python3 scripts/benchmark.py --devices 2000 --events 40 --concurrency 32
+```
 
-## Historical v0.1 / v0.1.1 limitations
+The implementation has 56 GoogleTest cases, the original DDQ C suite, 26 integration tests, and a 100-trial process crash campaign. The crash campaign checks event and notification uniqueness, original payloads, and queue drain after replay. See [recorded evidence](docs/evidence/), [benchmark report](docs/BENCHMARKS.md), and [requirements traceability](docs/TRACEABILITY.md).
 
-This is a POC baseline for integration experiments, not a completed
-power-cut certification. Filesystem and storage hardware must honor flushes;
-no software queue can compensate for a controller that lies about fsync or
-loses acknowledged writes. Validation on the target ARM32/eMMC device still
-requires controlled power-cut testing.
+The 10,000 accepted events/sec objective is a target and was not achieved in the recorded local benchmark. No power-cut or medical-device certification is claimed. PostgreSQL is required for identity validation during admission. The single-owner DDQ foundation synchronizes each state transition; group commit and distributed ingestion are future work.
 
-The historical prototype and v0.1.1 baseline had no segment compaction or
-deletion; acknowledged and quarantined records remained in their logs.
-The 2026-09-28 implementation adds the capacity changes described above, and
-does not rewrite that release history. Group commit, multiple writers,
-multiple consumers, and priority scheduling remain unsupported. One fsync
-per state change still favors durability over throughput.
+Separate sanitizer builds:
 
-## License
+```sh
+cmake -S . -B build-asan -DPULSE_SANITIZER=address -DCMAKE_BUILD_TYPE=Debug
+cmake --build build-asan -j 4
+ctest --test-dir build-asan --output-on-failure
+cmake -S . -B build-tsan -DPULSE_SANITIZER=thread -DCMAKE_BUILD_TYPE=Debug
+cmake --build build-tsan -j 4
+ctest --test-dir build-tsan --output-on-failure
+```
 
-BSD 3-Clause. See LICENSE.
+CI is configured to run these configurations with PostgreSQL and upload evidence. The local ASan and TSan binaries compiled, but their runtimes timed out before test output on this macOS host; sanitizer verification is incomplete. [Architecture and failure model](docs/ARCHITECTURE.md) explains the delivery contract and bounds; [Medtronic alignment](docs/MEDTRONIC_ALIGNMENT.md) explains the portfolio context. License: BSD-3-Clause, retaining original attribution.

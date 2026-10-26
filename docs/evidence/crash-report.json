@@ -1,0 +1,813 @@
+{
+  "rounds": 100,
+  "lost_observed_acknowledgments": 0,
+  "duplicate_events": 0,
+  "observed_acknowledgments": 66,
+  "failure_model": "process _exit(86) at five hooks; SIGKILL after HTTP acceptance; same intact filesystem and PostgreSQL",
+  "test_lease_ms": 100,
+  "production_lease_ms": 30000,
+  "recovery_scope": "restart through readiness, event visibility, idempotency and derived-state checks",
+  "recovery_p50_ms": 95.21941650018562,
+  "trials": [
+    {
+      "round": 1,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 133.8880830007838,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 2,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 72.45866700031911,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 3,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 161.70625000086147,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 4,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 106.52145899803145,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 5,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 72.23658300063107,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 6,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 70.92966599884676,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 7,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 131.24066700038384,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 8,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 69.42195899682702,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 9,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 186.69824999960838,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 10,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 140.07499999934225,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 11,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 71.47870900007547,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 12,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 72.22720899881097,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 13,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 128.2017919984355,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 14,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 71.15079199866159,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 15,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 178.43604100198718,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 16,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 104.94220900000073,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 17,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 72.91745900147362,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 18,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 65.9492919985496,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 19,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 124.90716699903714,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 20,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 70.71504100167658,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 21,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 150.07445899755112,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 22,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 102.64650000317488,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 23,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 74.94783299989649,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 24,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 71.70966600097017,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 25,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 129.63837499773945,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 26,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 69.8619590002636,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 27,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 181.1033750018396,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 28,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 131.76620800004457,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 29,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 67.414541998005,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 30,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 70.36408299973118,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 31,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 126.72191700039548,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 32,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 71.34475000202656,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 33,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 183.60074999873177,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 34,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 102.47629099831101,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 35,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 68.74170899754972,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 36,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 70.40387500092038,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 37,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 126.9677500022226,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 38,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 65.10120899838512,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 39,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 146.9030419975752,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 40,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 105.74262500085752,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 41,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 64.89637499907985,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 42,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 64.8605829992448,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 43,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 123.19495900010224,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 44,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 70.78516699766624,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 45,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 177.61304099985864,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 46,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 106.91233299803571,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 47,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 69.69112500155461,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 48,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 71.2461249968328,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 49,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 124.46212500071852,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 50,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 69.47149999905378,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 51,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 185.3987499998766,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 52,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 140.40816600027028,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 53,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 69.40170799862244,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 54,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 70.13595799799077,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 55,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 169.6864170007757,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 56,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 75.55074999982025,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 57,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 185.44999999721767,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 58,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 105.42791700208909,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 59,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 70.10154199815588,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 60,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 71.05358300032094,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 61,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 129.55479200172704,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 62,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 68.3985829964513,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 63,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 144.22800000102143,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 64,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 101.92933300277218,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 65,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 66.13916599962977,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 66,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 69.68395799776772,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 67,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 90.71616700020968,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 68,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 69.61579199924017,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 69,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 187.66608399891993,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 70,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 109.55070800264366,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 71,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 76.19162499759113,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 72,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 65.62308299908182,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 73,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 152.6207089991658,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 74,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 73.36633299928508,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 75,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 143.6913329998788,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 76,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 99.72266600016155,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 77,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 71.41133299955982,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 78,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 73.61329099876457,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 79,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 122.90654200114659,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 80,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 68.47554100022535,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 81,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 144.03329199922155,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 82,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 107.51508300018031,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 83,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 70.65904200135265,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 84,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 65.75716699808254,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 85,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 129.97854100103723,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 86,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 70.2612080021936,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 87,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 185.18104200120433,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 88,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 101.3049579996732,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 89,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 66.13691600068705,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 90,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 66.52841700270073,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 91,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 125.09220800347975,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 92,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 72.78741700065439,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 93,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 149.1335419996176,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 94,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 139.2472080005973,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 95,
+      "stage": "after_ack",
+      "client_observed_ack": true,
+      "recovery_ms": 71.38900000063586,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 96,
+      "stage": "sigkill_after_response",
+      "client_observed_ack": true,
+      "recovery_ms": 66.72608300141292,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 97,
+      "stage": "before_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 134.33695799903944,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 98,
+      "stage": "after_wal",
+      "client_observed_ack": false,
+      "recovery_ms": 71.86937499864143,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 99,
+      "stage": "after_claim",
+      "client_observed_ack": true,
+      "recovery_ms": 142.66166699962923,
+      "events": 1,
+      "notifications": 1
+    },
+    {
+      "round": 100,
+      "stage": "after_commit",
+      "client_observed_ack": true,
+      "recovery_ms": 109.20787500072038,
+      "events": 1,
+      "notifications": 1
+    }
+  ]
+}

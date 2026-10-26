@@ -1,0 +1,31 @@
+test_01_registration_requires_operator (__main__.Integration.test_01_registration_requires_operator) ... ok
+test_02_unknown_device (__main__.Integration.test_02_unknown_device) ... ok
+test_03_wrong_device_credential (__main__.Integration.test_03_wrong_device_credential) ... ok
+test_04_validation (__main__.Integration.test_04_validation) ... ok
+test_05_exact_duplicate (__main__.Integration.test_05_exact_duplicate) ... ok
+test_06_conflicting_payload (__main__.Integration.test_06_conflicting_payload) ... ok
+test_07_concurrent_duplicates (__main__.Integration.test_07_concurrent_duplicates) ... ok
+test_08_sequence_collision (__main__.Integration.test_08_sequence_collision) ... ok
+test_09_out_of_order_provenance (__main__.Integration.test_09_out_of_order_provenance) ... ok
+test_10_clinic_device_isolation (__main__.Integration.test_10_clinic_device_isolation) ... ok
+test_11_clinic_credential_required (__main__.Integration.test_11_clinic_credential_required) ... ok
+test_12_connectivity_overdue (__main__.Integration.test_12_connectivity_overdue) ... ok
+test_13_incomplete_to_received_transmission (__main__.Integration.test_13_incomplete_to_received_transmission) ... ok
+test_14_delayed_transmission (__main__.Integration.test_14_delayed_transmission) ... ok
+test_15_unexpected_transmission_rejected (__main__.Integration.test_15_unexpected_transmission_rejected) ... ok
+test_16_part_identity_conflict (__main__.Integration.test_16_part_identity_conflict) ... ok
+test_17_notification_states_and_isolation (__main__.Integration.test_17_notification_states_and_isolation) ... ok
+test_18_database_processing_failure_retries (__main__.Integration.test_18_database_processing_failure_retries) ... ok
+test_19_audit_provenance_and_scope (__main__.Integration.test_19_audit_provenance_and_scope) ... ok
+test_20_metrics_authorization (__main__.Integration.test_20_metrics_authorization) ... ok
+test_21_restart_replays_acknowledged_event (__main__.Integration.test_21_restart_replays_acknowledged_event) ... ok
+test_22_fragmented_tcp_body (__main__.Integration.test_22_fragmented_tcp_body) ... ok
+test_23_cpp_simulator_mixed_scenario (__main__.Integration.test_23_cpp_simulator_mixed_scenario) ... ok
+test_24_pre_wal_reservation_survives_crash (__main__.Integration.test_24_pre_wal_reservation_survives_crash) ... ok
+test_25_broken_database_sessions_reconnect (__main__.Integration.test_25_broken_database_sessions_reconnect) ... ok
+test_26_battery_projection_has_its_own_receipt_clock (__main__.Integration.test_26_battery_projection_has_its_own_receipt_clock) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 3.866s
+
+OK

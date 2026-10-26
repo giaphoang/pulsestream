@@ -1,0 +1,10 @@
+.git
+build*
+.local
+.secrets
+.env
+data
+references
+third_party
+docs/evidence
+**/__pycache__

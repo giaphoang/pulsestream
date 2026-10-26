@@ -1,16 +1,43 @@
-name: build
-
-on:
-  push:
-  pull_request:
-
+name: PulseStream verification
+on: [push, pull_request]
 jobs:
-  linux:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        sanitizer: [none, address, thread]
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: pulse
+          POSTGRES_PASSWORD: synthetic-ci-password
+          POSTGRES_DB: pulsestream_test
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U pulse" --health-interval 3s --health-timeout 3s --health-retries 20
+    env:
+      PULSE_TEST_DATABASE_URL: postgresql://pulse:synthetic-ci-password@127.0.0.1:5432/pulsestream_test
     steps:
       - uses: actions/checkout@v4
-      - name: Build
-        run: make
-      - name: Test
-        run: timeout 20s make test
+      - run: sudo apt-get update && sudo apt-get install -y cmake ninja-build libpq-dev libssl-dev libgtest-dev postgresql-client
+      - name: Configure and build
+        run: |
+          sanitizer="${{ matrix.sanitizer }}"
+          if [ "$sanitizer" = none ]; then sanitizer=""; fi
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DPULSE_SANITIZER="$sanitizer"
+          cmake --build build -j 4
+      - run: ctest --test-dir build --output-on-failure
+      - run: python3 tests/integration.py
+      - if: matrix.sanitizer == 'none'
+        run: python3 tests/crash_matrix.py --rounds 100
+      - if: matrix.sanitizer == 'none'
+        run: python3 scripts/benchmark.py --devices 1000 --events 10 --concurrency 32
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evidence-${{ matrix.sanitizer }}
+          path: |
+            docs/evidence/
+            build/Testing/Temporary/

@@ -1,0 +1,16 @@
+Test project /Users/zap/Documents/healthcare_portfolio/pulsestream/build-tsan
+    Start 1: pulse_sanitized
+1/2 Test #1: pulse_sanitized ..................***Timeout  60.04 sec
+
+    Start 2: upstream_ddq
+2/2 Test #2: upstream_ddq .....................***Timeout  30.01 sec
+
+
+0% tests passed, 2 tests failed out of 2
+
+Total Test time (real) =  90.06 sec
+
+The following tests FAILED:
+	  1 - pulse_sanitized (Timeout)
+	  2 - upstream_ddq (Timeout)
+Errors while running CTest

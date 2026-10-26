@@ -1,0 +1,119 @@
+Test project /Users/zap/Documents/healthcare_portfolio/pulsestream/build
+      Start  1: Model.HeartbeatRetainsProvenance
+ 1/57 Test  #1: Model.HeartbeatRetainsProvenance ............................................................................................   Passed    0.01 sec
+      Start  2: Model.DiagnosticEvent
+ 2/57 Test  #2: Model.DiagnosticEvent .......................................................................................................   Passed    0.01 sec
+      Start  3: Model.ScheduledPart
+ 3/57 Test  #3: Model.ScheduledPart .........................................................................................................   Passed    0.01 sec
+      Start  4: Model.DeviceStatus
+ 4/57 Test  #4: Model.DeviceStatus ..........................................................................................................   Passed    0.01 sec
+      Start  5: Model.BatteryBoundaries
+ 5/57 Test  #5: Model.BatteryBoundaries .....................................................................................................   Passed    0.01 sec
+      Start  6: Model.OldEventAllowed
+ 6/57 Test  #6: Model.OldEventAllowed .......................................................................................................   Passed    0.01 sec
+      Start  7: Model.CanonicalFieldOrder
+ 7/57 Test  #7: Model.CanonicalFieldOrder ...................................................................................................   Passed    0.01 sec
+      Start  8: Model.CredentialHash
+ 8/57 Test  #8: Model.CredentialHash ........................................................................................................   Passed    0.01 sec
+      Start  9: Model.CredentialComparison
+ 9/57 Test  #9: Model.CredentialComparison ..................................................................................................   Passed    0.01 sec
+      Start 10: Model.MissingRequiredFields
+10/57 Test #10: Model.MissingRequiredFields .................................................................................................   Passed    0.01 sec
+      Start 11: Model.WrongContainer
+11/57 Test #11: Model.WrongContainer ........................................................................................................   Passed    0.01 sec
+      Start 12: Model.ScheduledBounds
+12/57 Test #12: Model.ScheduledBounds .......................................................................................................   Passed    0.01 sec
+      Start 13: Model.DeviceStatusEnum
+13/57 Test #13: Model.DeviceStatusEnum ......................................................................................................   Passed    0.01 sec
+      Start 14: Tracking.Expected
+14/57 Test #14: Tracking.Expected ...........................................................................................................   Passed    0.01 sec
+      Start 15: Tracking.Incomplete
+15/57 Test #15: Tracking.Incomplete .........................................................................................................   Passed    0.01 sec
+      Start 16: Tracking.Overdue
+16/57 Test #16: Tracking.Overdue ............................................................................................................   Passed    0.01 sec
+      Start 17: Tracking.Received
+17/57 Test #17: Tracking.Received ...........................................................................................................   Passed    0.01 sec
+      Start 18: Tracking.Delayed
+18/57 Test #18: Tracking.Delayed ............................................................................................................   Passed    0.01 sec
+      Start 19: Queue.RestartPreservesPayload
+19/57 Test #19: Queue.RestartPreservesPayload ...............................................................................................   Passed    0.01 sec
+      Start 20: Queue.AckSurvivesRestart
+20/57 Test #20: Queue.AckSurvivesRestart ....................................................................................................   Passed    0.01 sec
+      Start 21: Queue.RetryReleasesClaim
+21/57 Test #21: Queue.RetryReleasesClaim ....................................................................................................   Passed    0.01 sec
+      Start 22: Queue.ExclusiveDirectoryOwnership
+22/57 Test #22: Queue.ExclusiveDirectoryOwnership ...........................................................................................   Passed    0.01 sec
+      Start 23: Queue.CapacityIsBounded
+23/57 Test #23: Queue.CapacityIsBounded .....................................................................................................   Passed    0.01 sec
+      Start 24: Queue.ConcurrentProducers
+24/57 Test #24: Queue.ConcurrentProducers ...................................................................................................   Passed    0.01 sec
+      Start 25: Queue.OversizedPayloadRejected
+25/57 Test #25: Queue.OversizedPayloadRejected ..............................................................................................   Passed    0.01 sec
+      Start 26: HTTP.ParsesBodyLength
+26/57 Test #26: HTTP.ParsesBodyLength .......................................................................................................   Passed    0.01 sec
+      Start 27: Validation/BadEvent.RejectsInvalidField/{"device_id":""}
+27/57 Test #27: Validation/BadEvent.RejectsInvalidField/{"device_id":""} ....................................................................   Passed    0.01 sec
+      Start 28: Validation/BadEvent.RejectsInvalidField/{"device_id":"../x"}
+28/57 Test #28: Validation/BadEvent.RejectsInvalidField/{"device_id":"../x"} ................................................................   Passed    0.01 sec
+      Start 29: Validation/BadEvent.RejectsInvalidField/{"device_id":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}
+29/57 Test #29: Validation/BadEvent.RejectsInvalidField/{"device_id":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"} ...   Passed    0.01 sec
+      Start 30: Validation/BadEvent.RejectsInvalidField/{"device_id":42}
+30/57 Test #30: Validation/BadEvent.RejectsInvalidField/{"device_id":42} ....................................................................   Passed    0.01 sec
+      Start 31: Validation/BadEvent.RejectsInvalidField/{"event_id":null}
+31/57 Test #31: Validation/BadEvent.RejectsInvalidField/{"event_id":null} ...................................................................   Passed    0.01 sec
+      Start 32: Validation/BadEvent.RejectsInvalidField/{"event_id":"contains space"}
+32/57 Test #32: Validation/BadEvent.RejectsInvalidField/{"event_id":"contains space"} .......................................................   Passed    0.01 sec
+      Start 33: Validation/BadEvent.RejectsInvalidField/{"schema_version":2}
+33/57 Test #33: Validation/BadEvent.RejectsInvalidField/{"schema_version":2} ................................................................   Passed    0.01 sec
+      Start 34: Validation/BadEvent.RejectsInvalidField/{"schema_version":1.0}
+34/57 Test #34: Validation/BadEvent.RejectsInvalidField/{"schema_version":1.0} ..............................................................   Passed    0.01 sec
+      Start 35: Validation/BadEvent.RejectsInvalidField/{"sequence":0}
+35/57 Test #35: Validation/BadEvent.RejectsInvalidField/{"sequence":0} ......................................................................   Passed    0.01 sec
+      Start 36: Validation/BadEvent.RejectsInvalidField/{"sequence":-1}
+36/57 Test #36: Validation/BadEvent.RejectsInvalidField/{"sequence":-1} .....................................................................   Passed    0.01 sec
+      Start 37: Validation/BadEvent.RejectsInvalidField/{"sequence":1.5}
+37/57 Test #37: Validation/BadEvent.RejectsInvalidField/{"sequence":1.5} ....................................................................   Passed    0.01 sec
+      Start 38: Validation/BadEvent.RejectsInvalidField/{"sequence":18446744073709551615}
+38/57 Test #38: Validation/BadEvent.RejectsInvalidField/{"sequence":18446744073709551615} ...................................................   Passed    0.01 sec
+      Start 39: Validation/BadEvent.RejectsInvalidField/{"timestamp_ms":0}
+39/57 Test #39: Validation/BadEvent.RejectsInvalidField/{"timestamp_ms":0} ..................................................................   Passed    0.01 sec
+      Start 40: Validation/BadEvent.RejectsInvalidField/{"timestamp_ms":301001}
+40/57 Test #40: Validation/BadEvent.RejectsInvalidField/{"timestamp_ms":301001} .............................................................   Passed    0.01 sec
+      Start 41: Validation/BadEvent.RejectsInvalidField/{"timestamp_ms":"1000"}
+41/57 Test #41: Validation/BadEvent.RejectsInvalidField/{"timestamp_ms":"1000"} .............................................................   Passed    0.01 sec
+      Start 42: Validation/BadEvent.RejectsInvalidField/{"battery_pct":-1}
+42/57 Test #42: Validation/BadEvent.RejectsInvalidField/{"battery_pct":-1} ..................................................................   Passed    0.01 sec
+      Start 43: Validation/BadEvent.RejectsInvalidField/{"battery_pct":101}
+43/57 Test #43: Validation/BadEvent.RejectsInvalidField/{"battery_pct":101} .................................................................   Passed    0.01 sec
+      Start 44: Validation/BadEvent.RejectsInvalidField/{"battery_pct":true}
+44/57 Test #44: Validation/BadEvent.RejectsInvalidField/{"battery_pct":true} ................................................................   Passed    0.01 sec
+      Start 45: Validation/BadEvent.RejectsInvalidField/{"type":"ecg_control"}
+45/57 Test #45: Validation/BadEvent.RejectsInvalidField/{"type":"ecg_control"} ..............................................................   Passed    0.01 sec
+      Start 46: Validation/BadEvent.RejectsInvalidField/{"diagnostic_flag":"wrong_type_field"}
+46/57 Test #46: Validation/BadEvent.RejectsInvalidField/{"diagnostic_flag":"wrong_type_field"} ..............................................   Passed    0.01 sec
+      Start 47: Validation/BadEvent.RejectsInvalidField/{"unexpected":1}
+47/57 Test #47: Validation/BadEvent.RejectsInvalidField/{"unexpected":1} ....................................................................   Passed    0.01 sec
+      Start 48: Framing/BadHTTP.RejectsAmbiguousFraming/"GET / HTTP/1.1\r\nHost: x\r\nContent-Length: 1"
+48/57 Test #48: Framing/BadHTTP.RejectsAmbiguousFraming/"GET / HTTP/1.1\r\nHost: x\r\nContent-Length: 1" ....................................   Passed    0.01 sec
+      Start 49: Framing/BadHTTP.RejectsAmbiguousFraming/"POST / HTTP/1.1\r\nHost: x\r\nContent-Length: -1"
+49/57 Test #49: Framing/BadHTTP.RejectsAmbiguousFraming/"POST / HTTP/1.1\r\nHost: x\r\nContent-Length: -1" ..................................   Passed    0.01 sec
+      Start 50: Framing/BadHTTP.RejectsAmbiguousFraming/"POST / HTTP/1.1\r\nHost: x\r\nContent-Length: 20000"
+50/57 Test #50: Framing/BadHTTP.RejectsAmbiguousFraming/"POST / HTTP/1.1\r\nHost: x\r\nContent-Length: 20000" ...............................   Passed    0.01 sec
+      Start 51: Framing/BadHTTP.RejectsAmbiguousFraming/"POST / HTTP/1.1\r\nHost: x\r\nTransfer-Encoding: chunked"
+51/57 Test #51: Framing/BadHTTP.RejectsAmbiguousFraming/"POST / HTTP/1.1\r\nHost: x\r\nTransfer-Encoding: chunked" ..........................   Passed    0.01 sec
+      Start 52: Framing/BadHTTP.RejectsAmbiguousFraming/"POST / HTTP/1.1\r\nHost: x\r\nContent-Length: 0\r\ncontent-length: 0"
+52/57 Test #52: Framing/BadHTTP.RejectsAmbiguousFraming/"POST / HTTP/1.1\r\nHost: x\r\nContent-Length: 0\r\ncontent-length: 0" ..............   Passed    0.01 sec
+      Start 53: Framing/BadHTTP.RejectsAmbiguousFraming/"GET / HTTP/1.0\r\nHost: x"
+53/57 Test #53: Framing/BadHTTP.RejectsAmbiguousFraming/"GET / HTTP/1.0\r\nHost: x" .........................................................   Passed    0.01 sec
+      Start 54: Framing/BadHTTP.RejectsAmbiguousFraming/"GET / HTTP/1.1\r\nAuthorization: x"
+54/57 Test #54: Framing/BadHTTP.RejectsAmbiguousFraming/"GET / HTTP/1.1\r\nAuthorization: x" ................................................   Passed    0.01 sec
+      Start 55: Framing/BadHTTP.RejectsAmbiguousFraming/"POST / HTTP/1.1\r\nHost: x"
+55/57 Test #55: Framing/BadHTTP.RejectsAmbiguousFraming/"POST / HTTP/1.1\r\nHost: x" ........................................................   Passed    0.01 sec
+      Start 56: Framing/BadHTTP.RejectsAmbiguousFraming/"GET / HTTP/1.1\r\nHost: x\r\nBad Header: x"
+56/57 Test #56: Framing/BadHTTP.RejectsAmbiguousFraming/"GET / HTTP/1.1\r\nHost: x\r\nBad Header: x" ........................................   Passed    0.01 sec
+      Start 57: upstream_ddq
+57/57 Test #57: upstream_ddq ................................................................................................................   Passed    0.05 sec
+
+100% tests passed, 0 tests failed out of 57
+
+Total Test time (real) =   0.66 sec

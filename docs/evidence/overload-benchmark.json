@@ -1,0 +1,20 @@
+{
+  "accepted": 99191,
+  "accepted_per_second": 317.75470626756857,
+  "concurrency": 32,
+  "devices": 1000,
+  "durability": "upstream DDQ fsync per record; PostgreSQL synchronous_commit=on",
+  "event_bytes_mean": 150.71,
+  "events_per_device": 100,
+  "failed": 809,
+  "latency_scope": "acceptance including retries; excludes registration and worker drain",
+  "p50_ms": 85.346542,
+  "p95_ms": 179.609125,
+  "p99_ms": 226.530666,
+  "retries": 4446,
+  "run_id": "bench1793033220",
+  "seconds": 312.162174292,
+  "verification_status": "incomplete: simulator exhausted retry budget; original harness exited before drain/identity verification",
+  "context": "overload exploration on same Apple M3 Pro host as benchmark.json; sanitizer startup probes ran concurrently",
+  "persisted_events_verified": false
+}

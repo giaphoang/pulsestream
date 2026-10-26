@@ -1,0 +1,316 @@
+openapi: 3.0.3
+info:
+  title: PulseStream synthetic telemetry API
+  version: 0.1.0
+  description: >-
+    Independent cardiac-device connectivity simulator. Synthetic identifiers and
+    events only. No diagnosis, device control or emergency alerting. HTTP/1.1,
+    Content-Length, application/json and bodies up to 16384 bytes. No query
+    parameters, encoded paths, chunked requests or pagination in this version.
+servers:
+  - url: http://localhost:8080
+paths:
+  /v1/devices:
+    post:
+      operationId: registerDevice
+      summary: Register an immutable device and its independent expected schedule
+      security: [{operatorBearer: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/DeviceRegistration'}
+      responses:
+        '201':
+          description: Registered; token is never returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  device_id: {$ref: '#/components/schemas/Identifier'}
+                  clinic_id: {$ref: '#/components/schemas/Identifier'}
+        '403': {$ref: '#/components/responses/Error'}
+        '409': {$ref: '#/components/responses/Error'}
+        '422': {$ref: '#/components/responses/Error'}
+        '503': {$ref: '#/components/responses/Error'}
+  /v1/events:
+    post:
+      operationId: ingestEvent
+      summary: Validate and durably accept a synthetic device event
+      description: >-
+        202 follows successful DDQ enqueue synchronization. 200 means the exact
+        event is already persisted. Pending duplicates may be enqueued again.
+        Retry the identical payload and identity after an ambiguous connection
+        result. Conflicts and reused sequence numbers return 409. Timestamp must
+        be positive and no more than five minutes ahead of the server clock.
+        Old and out-of-order events are retained. Identity reservation requires
+        PostgreSQL availability before WAL admission. A reservation without a
+        successful append is not durable acceptance.
+      security: [{deviceBearer: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/Event'}
+      responses:
+        '202':
+          description: Durably accepted; asynchronous processing pending
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, event_id, queue_sequence, durability]
+                properties:
+                  status: {type: string, enum: [durably_accepted]}
+                  event_id: {$ref: '#/components/schemas/Identifier'}
+                  queue_sequence: {type: integer, format: int64}
+                  durability: {type: string, enum: [fsync_each_record]}
+        '200':
+          description: Persisted duplicate; no new clinical record
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: {type: string, enum: [persisted_duplicate]}
+                  event_id: {$ref: '#/components/schemas/Identifier'}
+        '401': {$ref: '#/components/responses/Error'}
+        '409': {$ref: '#/components/responses/Error'}
+        '422': {$ref: '#/components/responses/Error'}
+        '503': {$ref: '#/components/responses/Error'}
+  /v1/devices/{device_id}/status:
+    parameters: [{$ref: '#/components/parameters/DeviceId'}]
+    get:
+      operationId: deviceStatus
+      summary: Clinic-authorized connectivity and device sequence high-water mark
+      security: [{clinicBearer: []}]
+      responses:
+        '200':
+          description: Connectivity uses server receipt time and configured overdue interval
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  device_id: {$ref: '#/components/schemas/Identifier'}
+                  clinic_id: {$ref: '#/components/schemas/Identifier'}
+                  connectivity: {type: string, enum: [awaiting_first_event, connected, overdue]}
+                  registered_ms: {type: integer, format: int64}
+                  last_seen_ms: {type: integer, format: int64, nullable: true}
+                  max_sequence: {type: integer, format: int64}
+                  overdue_after_ms: {type: integer, format: int64}
+                  battery_pct: {type: integer, nullable: true}
+        '404': {$ref: '#/components/responses/Error'}
+        '403': {$ref: '#/components/responses/Error'}
+  /v1/devices/{device_id}/events:
+    parameters: [{$ref: '#/components/parameters/DeviceId'}]
+    get:
+      operationId: eventHistory
+      summary: Up to 100 committed events in descending sequence order
+      security: [{clinicBearer: []}]
+      responses:
+        '200':
+          description: Original event payload and server receipt time are retained
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit: {type: integer, enum: [100]}
+                  events:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        event_id: {$ref: '#/components/schemas/Identifier'}
+                        sequence: {type: integer, format: int64}
+                        timestamp_ms: {type: integer, format: int64}
+                        received_ms: {type: integer, format: int64}
+                        type: {type: string}
+                        payload: {$ref: '#/components/schemas/Event'}
+        '404': {$ref: '#/components/responses/Error'}
+        '403': {$ref: '#/components/responses/Error'}
+  /v1/transmissions:
+    get:
+      operationId: transmissionStatus
+      summary: Up to 100 clinic schedules ordered by deadline
+      description: >-
+        State is computed from committed unique parts at query time. Missing
+        parts after deadline are overdue; completed after deadline is delayed.
+        Expected schedules are supplied at device registration.
+      security: [{clinicBearer: []}]
+      responses:
+        '200':
+          description: Expected schedule and independently received part counts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit: {type: integer, enum: [100]}
+                  transmissions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        device_id: {$ref: '#/components/schemas/Identifier'}
+                        transmission_id: {$ref: '#/components/schemas/Identifier'}
+                        due_ms: {type: integer, format: int64}
+                        parts_total: {type: integer}
+                        received_parts: {type: integer}
+                        last_received_ms: {type: integer, format: int64}
+                        state: {type: string, enum: [expected, incomplete, overdue, received, delayed]}
+        '403': {$ref: '#/components/responses/Error'}
+  /v1/notifications:
+    get:
+      operationId: retrieveNotifications
+      summary: Deliver up to 100 clinic notifications, recording first delivery
+      description: >-
+        Retrieval deliberately records delivered_ms for returned notifications.
+        This is API delivery, not staff acknowledgment. Timestamp is preserved on
+        repeated retrieval. Array order is unspecified; selection uses newest IDs.
+      security: [{clinicBearer: []}]
+      responses:
+        '200':
+          description: Clinic-scoped synthetic diagnostic flags
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit: {type: integer, enum: [100]}
+                  notifications:
+                    type: array
+                    items: {$ref: '#/components/schemas/Notification'}
+        '403': {$ref: '#/components/responses/Error'}
+  /v1/notifications/{notification_id}/ack:
+    parameters:
+      - name: notification_id
+        in: path
+        required: true
+        schema: {type: string, pattern: '^[0-9]{1,18}$'}
+    post:
+      operationId: acknowledgeNotification
+      summary: Record clinic staff review after delivery; repeated calls are idempotent
+      security: [{clinicBearer: []}]
+      responses:
+        '200':
+          description: Preserves first acknowledgment timestamp
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: {type: integer, format: int64}
+                  delivered_ms: {type: integer, format: int64}
+                  acknowledged_ms: {type: integer, format: int64}
+        '404': {$ref: '#/components/responses/Error'}
+        '409': {$ref: '#/components/responses/Error'}
+        '403': {$ref: '#/components/responses/Error'}
+  /v1/audit:
+    get:
+      operationId: auditHistory
+      summary: Retrieve up to 100 clinic audit records in descending ID order
+      security: [{clinicBearer: []}]
+      responses:
+        '200':
+          description: Credential-free provenance; only authorized clinic records
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  limit: {type: integer, enum: [100]}
+                  audit:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: {type: integer, format: int64}
+                        action: {type: string}
+                        subject: {type: string}
+                        occurred_ms: {type: integer, format: int64}
+        '403': {$ref: '#/components/responses/Error'}
+components:
+  securitySchemes:
+    operatorBearer: {type: http, scheme: bearer, description: Operator credential from environment}
+    deviceBearer: {type: http, scheme: bearer, description: Registered device credential}
+    clinicBearer: {type: http, scheme: bearer, description: Clinic-scoped reviewer credential}
+  parameters:
+    DeviceId:
+      name: device_id
+      in: path
+      required: true
+      schema: {$ref: '#/components/schemas/Identifier'}
+  responses:
+    Error:
+      description: >-
+        Error JSON. Unknown/invalid credentials are rejected. Cross-clinic
+        resource access returns 404. Validation returns 422, conflicts 409,
+        unavailable persistence or capacity returns 503. Parser/framing errors
+        may return 400, 405, 408, 411, 413, 415 or 431. Retry 503 with backoff.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: {type: string}
+  schemas:
+    Identifier:
+      type: string
+      pattern: '^[A-Za-z0-9_-]{1,64}$'
+      maxLength: 64
+    Schedule:
+      type: object
+      required: [transmission_id, due_ms, parts_total]
+      properties:
+        transmission_id: {$ref: '#/components/schemas/Identifier'}
+        due_ms: {type: integer, format: int64, minimum: 1}
+        parts_total: {type: integer, minimum: 1, maximum: 1024}
+    DeviceRegistration:
+      type: object
+      required: [device_id, clinic_id, token, overdue_after_ms]
+      properties:
+        device_id: {$ref: '#/components/schemas/Identifier'}
+        clinic_id: {$ref: '#/components/schemas/Identifier'}
+        token: {type: string, minLength: 16, maxLength: 256, writeOnly: true}
+        overdue_after_ms: {type: integer, format: int64, minimum: 1000, maximum: 604800000}
+        expected_transmissions:
+          type: array
+          maxItems: 100
+          items: {$ref: '#/components/schemas/Schedule'}
+    Event:
+      type: object
+      additionalProperties: false
+      required: [device_id, event_id, timestamp_ms, sequence, schema_version, type]
+      description: >-
+        heartbeat requires battery_pct; diagnostic_event requires diagnostic_flag;
+        scheduled_transmission requires transmission_id, part_index and parts_total;
+        device_status requires status. Fields belonging to other types are rejected.
+        part_index is zero-based and strictly less than parts_total. Sequence is a
+        positive signed 64-bit integer, unique per device.
+      properties:
+        device_id: {$ref: '#/components/schemas/Identifier'}
+        event_id: {$ref: '#/components/schemas/Identifier'}
+        timestamp_ms: {type: integer, format: int64, minimum: 1}
+        sequence: {type: integer, format: int64, minimum: 1, maximum: 9223372036854775807}
+        schema_version: {type: integer, enum: [1]}
+        type: {type: string, enum: [heartbeat, scheduled_transmission, diagnostic_event, device_status]}
+        battery_pct: {type: integer, minimum: 0, maximum: 100}
+        diagnostic_flag: {$ref: '#/components/schemas/Identifier'}
+        transmission_id: {$ref: '#/components/schemas/Identifier'}
+        part_index: {type: integer, minimum: 0, maximum: 1023}
+        parts_total: {type: integer, minimum: 1, maximum: 1024}
+        status: {type: string, enum: [low_battery, communication_failure, reconnect]}
+    Notification:
+      type: object
+      properties:
+        id: {type: integer, format: int64}
+        device_id: {$ref: '#/components/schemas/Identifier'}
+        event_id: {$ref: '#/components/schemas/Identifier'}
+        flag: {$ref: '#/components/schemas/Identifier'}
+        created_ms: {type: integer, format: int64}
+        delivered_ms: {type: integer, format: int64, nullable: true}
+        acknowledged_ms: {type: integer, format: int64, nullable: true}
